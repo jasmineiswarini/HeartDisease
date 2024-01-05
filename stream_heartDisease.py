@@ -7,6 +7,7 @@ import streamlit as st
 import time
 import pickle
 import os
+from PIL import Image
 from streamlit_option_menu import option_menu
 
 with open("data/hungarian.data", encoding='Latin1') as file:
@@ -109,35 +110,37 @@ st.set_page_config(
 )
 
 with st.sidebar:
-  selected =option_menu("Heart Disease", ["Home","Single Prediction","Multiple Prediction"],
+  selected =option_menu("Heart Disease", ["Beranda","Prediksi Tunggal","Prediksi Ganda"],
                         icons = ['house','person','people'], menu_icon="heart", default_index=1)
-if selected=="Home" :
-  st.header("Heart Disease Prediction")
-  st.image("heart-disease-thumb.jpg")
-  st.write("Heart disease, also known as cardiovascular disease, refers to a class of diseases that involve the heart or blood vessels. It is a broad term that encompasses various conditions that affect the heart's structure and function. The most common type of heart disease is coronary artery disease, which can lead to heart attacks.")
+if selected=="Beranda" :
+  st.markdown("<h1 style='text-align: center'>Prediksi Penyakit Jantung</h1><br>", unsafe_allow_html=True)
+
+  img = Image.open("heart-disease-thumb.jpg")
+
+  st.image("heart-disease-thumb.jpg", use_column_width=True)
+  container = st.container(border=True)
+  container.write("Penyakit jantung adalah kondisi ketika bagian jantung yang meliputi pembuluh darah jantung, selaput jantung, katup jantung, dan otot jantung mengalami gangguan. Penyakit jantung bisa disebabkan oleh berbagai hal, seperti sumbatan pada pembuluh darah jantung, peradangan, infeksi, atau kelainan bawaan.")
 
   st.subheader("Dataset")
-  st.write("This prediction uses the **Hungarian.data** dataset obtained from UCI. This prediction uses the following parameters:")
-  col1, col2 = st.columns(2)
-  col1.write("- Age")
-  col1.write("- Sex")
-  col2.write("- ST depression induced by exercise relative to rest")
-  col1.write("- Chest Pain type")
-  col1.write("- Resting blood pressure")
-  col1.write("- Serum cholestoral")
-  col2.write("- Fasting blood sugar")
-  col2.write("- Resting electrocardiographic results")
-  col2.write("- Maximum heart rate achieved")
-  col2.write("- Exercise induced angina?")
-  st.write("We used XGBoost as our model and used SMOTE (oversampling) data, Prediction results are divided into 5 levels, namely healthy, Heart Disease level 1, Heart Disease level 2, Heart Disease level 3, Heart Disease level 4 ")
+  st.write("Dataset yang digunakan pada sistem ini adalah **hungarian.data** yang didapatkan dari **UCI** dengan link berikut : https://archive.ics.uci.edu/dataset/45/heart+disease data tersebut diolah menggunakan algoritma XGBoost. Sebelum data tersebut diolah dilakukan terlebih dahulu _oversampling_ menggunakan metode **SMOTE**. Akurasi yang didapatkan oleh model yang dibuat adalah " f":red[**{accuracy}**]%" ". Prediksi dibedakan menjadi 5 level yaitu : **Healthy**, **Heart Disease level 1**, **Heart Disease level 2**, **Heart Disease level 3**, **Heart Disease level 4**")
   st.write("")
-  st.write(f"**_Model's Accuracy_** :  :red[**{accuracy}**]% (:green[_Do not copy outright_])")
-
+  st.write("Pada dataset tersebut hanya beberapa parameter yang digunakan. Berikut parameter yang digunakan pada evaluasi model :")
+  col1, col2 = st.columns(2)
+  col1.write("- Usia")
+  col1.write("- Jenis Kelamin")
+  col2.write("- Depresi ST disebabkan oleh olahraga dibandingkan istirahat")
+  col1.write("- Tipe nyeri pada dada")
+  col1.write("- Tekanan darah pada saat istirahat")
+  col1.write("- Kolesterol serum")
+  col2.write("- Gula darah pada saat berpuasa")
+  col2.write("- EKG yang diambil saat diam")
+  col2.write("- Detak jantung maksimum")
+  col2.write("- Nyeri dada saat melakukan olahraga")
 
 
   
-elif selected=="Single Prediction":
-  st.title("Heart Disease")
+elif selected=="Prediksi Tunggal":
+  st.title("Heart Disease Prediction")
   st.write(f"**_Model's Accuracy_** :  :red[**{accuracy}**]% (:green[_Do not copy outright_])")
   st.header("**User Input :**")
 
@@ -279,12 +282,12 @@ elif selected=="Single Prediction":
 
 
 else :
-  st.header("Predict multiple data:")
+  st.header("Prediksi multiple data:")
 
   sample_csv = df_final.iloc[:5, :-1].to_csv(index=False).encode('utf-8')
 
   st.write("")
-  st.download_button("Download CSV Example", data=sample_csv, file_name='sample_heart_disease_parameters.csv', mime='text/csv')
+  st.download_button("Download Contoh CSV", data=sample_csv, file_name='sample_heart_disease_parameters.csv', mime='text/csv')
 
   st.write("")
   st.write("")
@@ -317,7 +320,7 @@ else :
         result = "Heart disease level 4"
       result_arr.append(result)
 
-    uploaded_result = pd.DataFrame({'Prediction Result': result_arr})
+    uploaded_result = pd.DataFrame({'Hasil Prediksi': result_arr})
 
     for i in range(70, 101):
       status_text.text(f"{i}% complete")
