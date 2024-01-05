@@ -122,7 +122,7 @@ if selected=="Beranda" :
   st.write("Penyakit jantung adalah kondisi ketika bagian jantung yang meliputi pembuluh darah jantung, selaput jantung, katup jantung, dan otot jantung mengalami gangguan. Penyakit jantung bisa disebabkan oleh berbagai hal, seperti sumbatan pada pembuluh darah jantung, peradangan, infeksi, atau kelainan bawaan.")
 
   st.subheader("Dataset")
-  st.write("Dataset yang digunakan pada sistem ini adalah **hungarian.data** yang didapatkan dari **UCI** dengan link berikut : https://archive.ics.uci.edu/dataset/45/heart+disease data tersebut diolah menggunakan algoritma XGBoost. Sebelum data tersebut diolah dilakukan terlebih dahulu _oversampling_ menggunakan metode **SMOTE**. Akurasi yang didapatkan oleh model yang dibuat adalah " f":red[**{accuracy}**]%" ". Prediksi dibedakan menjadi 5 level yaitu : **Healthy**, **Heart Disease level 1**, **Heart Disease level 2**, **Heart Disease level 3**, **Heart Disease level 4**")
+  st.write("Dataset yang digunakan pada sistem ini adalah **hungarian.data** yang didapatkan dari **UCI** dengan link berikut : https://archive.ics.uci.edu/dataset/45/heart+disease data tersebut diolah menggunakan algoritma XGBoost. Sebelum data tersebut diolah dilakukan terlebih dahulu _oversampling_ menggunakan metode **SMOTE**. Akurasi yang didapatkan oleh model yang dibuat adalah " f":red[**{accuracy}**]%" ". Hasil prediksi dibedakan menjadi 5 level yaitu : **Healthy**, **Heart Disease level 1**, **Heart Disease level 2**, **Heart Disease level 3**, **Heart Disease level 4**")
   st.write("")
   st.write("Pada dataset tersebut hanya beberapa parameter yang digunakan. Berikut parameter yang digunakan pada evaluasi model :")
   col1, col2 = st.columns(2)
