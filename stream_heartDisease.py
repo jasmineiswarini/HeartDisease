@@ -103,4 +103,4 @@ df_final['target'] = y
 with st.sidebar:
   selected =option_menu("Main Menu", ["Home","Single Prediction","Multiple Prediction"],
                         icons = ['house','person','people'], menu_icon="cast", default_index=1)
-selected
+st.write("You selected:", selected)
