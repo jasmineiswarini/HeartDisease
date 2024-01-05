@@ -90,20 +90,6 @@ X, y = smote.fit_resample(X, y)
 
 model = pickle.load(open("model/xgb_model.pkl", 'rb'))
 
-#changing
-
-if os.path.exists(model_file_path):
-    with open(model_file_path, 'rb') as model_file:
-        model = pickle.load(model_file)
-        y_pred = model.predict(X)
-        accuracy = accuracy_score(y, y_pred)
-        accuracy = round((accuracy * 100), 2)
-
-        df_final = X
-        df_final['target'] = y
-else:
-    st.error(f"Error: Unable to find the model file at {model_file_path}")
-
 
 y_pred = model.predict(X)
 accuracy = accuracy_score(y, y_pred)
@@ -116,15 +102,46 @@ df_final['target'] = y
 
 
 #STREAMLIT
+
+st.set_page_config(
+  page_title = "Hungarian Heart Disease",
+  page_icon = ":heart:"
+)
+
 with st.sidebar:
-  selected =option_menu("Main Menu", ["Home","Single Prediction","Multiple Prediction"],
-                        icons = ['house','person','people'], menu_icon="cast", default_index=1)
+  selected =option_menu("Heart Disease", ["Home","Single Prediction","Multiple Prediction"],
+                        icons = ['house','person','people'], menu_icon="heart", default_index=1)
 if selected=="Home" :
-  st.write("You selected:", selected)
+  st.header("Heart Disease Prediction")
+  st.image("heart-disease-thumb.jpg")
+  st.write("Heart disease, also known as cardiovascular disease, refers to a class of diseases that involve the heart or blood vessels. It is a broad term that encompasses various conditions that affect the heart's structure and function. The most common type of heart disease is coronary artery disease, which can lead to heart attacks.")
+
+  st.subheader("Dataset")
+  st.write("This prediction uses the **Hungarian.data** dataset obtained from UCI. This prediction uses the following parameters:")
+  col1, col2 = st.columns(2)
+  col1.write("- Age")
+  col1.write("- Sex")
+  col2.write("- ST depression induced by exercise relative to rest")
+  col1.write("- Chest Pain type")
+  col1.write("- Resting blood pressure")
+  col1.write("- Serum cholestoral")
+  col2.write("- Fasting blood sugar")
+  col2.write("- Resting electrocardiographic results")
+  col2.write("- Maximum heart rate achieved")
+  col2.write("- Exercise induced angina?")
+  st.write("We used XGBoost as our model and used SMOTE (oversampling) data, Prediction results are divided into 5 levels, namely healthy, Heart Disease level 1, Heart Disease level 2, Heart Disease level 3, Heart Disease level 4 ")
+  st.write("")
+  st.write(f"**_Model's Accuracy_** :  :red[**{accuracy}**]% (:green[_Do not copy outright_])")
+
+
+
+  
 elif selected=="Single Prediction":
   st.title("Heart Disease")
-  st.header("**Single Prediction**")
-  age = st.selectbox(label=":blue[**Age**]", min_value=df_final['age'].min(), max_value=df_final['age'].max())
+  st.write(f"**_Model's Accuracy_** :  :red[**{accuracy}**]% (:green[_Do not copy outright_])")
+  st.header("**User Input :**")
+
+  age = st.number_input(label=":blue[**Age**]",min_value=df_final['age'].min(), max_value=df_final['age'].max())
   st.write(f":orange[Min] value: :orange[**{df_final['age'].min()}**], :red[Max] value: :red[**{df_final['age'].max()}**]")
   st.write("")
   sex_sb = st.selectbox(label=":blue[**Sex**]", options=["Male", "Female"])
@@ -137,9 +154,9 @@ elif selected=="Single Prediction":
     #1 = Male
     #2 = Female
 
-  cp_sb = st.sidebar.selectbox(label=":blue[**Chest pain type**]", options=["Typical angina", "Atypical angina", "Non-anginal pain", "Asymptomatic"])
-  st.sidebar.write("")
-  st.sidebar.write("")
+  cp_sb = st.selectbox(label=":blue[**Chest pain type**]", options=["Typical angina", "Atypical angina", "Non-anginal pain", "Asymptomatic"])
+  st.write("")
+  st.write("")
   if cp_sb == "Typical angina":
     cp = 1
   elif cp_sb == "Atypical angina":
@@ -152,17 +169,17 @@ elif selected=="Single Prediction":
   # -- Value 2: atypical angina
   # -- Value 3: non-anginal pain
   # -- Value 4: asymptomatic
-    trestbps = st.sidebar.number_input(label=":blue[**Resting blood pressure** (in mm Hg on admission to the hospital)]", min_value=df_final['trestbps'].min(), max_value=df_final['trestbps'].max())
-  st.sidebar.write(f":orange[Min] value: :orange[**{df_final['trestbps'].min()}**], :red[Max] value: :red[**{df_final['trestbps'].max()}**]")
-  st.sidebar.write("")
+  trestbps = st.number_input(label=":blue[**Resting blood pressure** (in mm Hg on admission to the hospital)]", min_value=df_final['trestbps'].min(), max_value=df_final['trestbps'].max())
+  st.write(f":orange[Min] value: :orange[**{df_final['trestbps'].min()}**], :red[Max] value: :red[**{df_final['trestbps'].max()}**]")
+  st.write("")
 
-  chol = st.sidebar.number_input(label=":blue[**Serum cholestoral** (in mg/dl)]", min_value=df_final['chol'].min(), max_value=df_final['chol'].max())
-  st.sidebar.write(f":orange[Min] value: :orange[**{df_final['chol'].min()}**], :red[Max] value: :red[**{df_final['chol'].max()}**]")
-  st.sidebar.write("")
+  chol = st.number_input(label=":blue[**Serum cholestoral** (in mg/dl)]", min_value=df_final['chol'].min(), max_value=df_final['chol'].max())
+  st.write(f":orange[Min] value: :orange[**{df_final['chol'].min()}**], :red[Max] value: :red[**{df_final['chol'].max()}**]")
+  st.write("")
 
-  fbs_sb = st.sidebar.selectbox(label=":blue[**Fasting blood sugar > 120 mg/dl?**]", options=["False", "True"])
-  st.sidebar.write("")
-  st.sidebar.write("")
+  fbs_sb = st.selectbox(label=":blue[**Fasting blood sugar > 120 mg/dl?**]", options=["False", "True"])
+  st.write("")
+  st.write("")
   if fbs_sb == "False":
     fbs = 0
   elif fbs_sb == "True":
@@ -170,9 +187,9 @@ elif selected=="Single Prediction":
   # -- Value 0: false
   # -- Value 1: true
 
-  restecg_sb = st.sidebar.selectbox(label=":blue[**Resting electrocardiographic results**]", options=["Normal", "Having ST-T wave abnormality", "Showing left ventricular hypertrophy"])
-  st.sidebar.write("")
-  st.sidebar.write("")
+  restecg_sb = st.selectbox(label=":blue[**Resting electrocardiographic results**]", options=["Normal", "Having ST-T wave abnormality", "Showing left ventricular hypertrophy"])
+  st.write("")
+  st.write("")
   if restecg_sb == "Normal":
     restecg = 0
   elif restecg_sb == "Having ST-T wave abnormality":
@@ -183,13 +200,13 @@ elif selected=="Single Prediction":
   # -- Value 1: having ST-T wave abnormality (T wave inversions and/or ST  elevation or depression of > 0.05 mV)
   # -- Value 2: showing probable or definite left ventricular hypertrophy by Estes' criteria
 
-  thalach = st.sidebar.number_input(label=":blue[**Maximum heart rate achieved**]", min_value=df_final['thalach'].min(), max_value=df_final['thalach'].max())
-  st.sidebar.write(f":orange[Min] value: :orange[**{df_final['thalach'].min()}**], :red[Max] value: :red[**{df_final['thalach'].max()}**]")
-  st.sidebar.write("")
+  thalach = st.number_input(label=":blue[**Maximum heart rate achieved**]", min_value=df_final['thalach'].min(), max_value=df_final['thalach'].max())
+  st.write(f":orange[Min] value: :orange[**{df_final['thalach'].min()}**], :red[Max] value: :red[**{df_final['thalach'].max()}**]")
+  st.write("")
 
-  exang_sb = st.sidebar.selectbox(label=":blue[**Exercise induced angina?**]", options=["No", "Yes"])
-  st.sidebar.write("")
-  st.sidebar.write("")
+  exang_sb = st.selectbox(label=":blue[**Exercise induced angina?**]", options=["No", "Yes"])
+  st.write("")
+  st.write("")
   if exang_sb == "No":
     exang = 0
   elif exang_sb == "Yes":
@@ -197,9 +214,9 @@ elif selected=="Single Prediction":
   # -- Value 0: No
   # -- Value 1: Yes
 
-  oldpeak = st.sidebar.number_input(label=":blue[**ST depression induced by exercise relative to rest**]", min_value=df_final['oldpeak'].min(), max_value=df_final['oldpeak'].max())
-  st.sidebar.write(f":orange[Min] value: :orange[**{df_final['oldpeak'].min()}**], :red[Max] value: :red[**{df_final['oldpeak'].max()}**]")
-  st.sidebar.write("")
+  oldpeak = st.number_input(label=":blue[**ST depression induced by exercise relative to rest**]", min_value=df_final['oldpeak'].min(), max_value=df_final['oldpeak'].max())
+  st.write(f":orange[Min] value: :orange[**{df_final['oldpeak'].min()}**], :red[Max] value: :red[**{df_final['oldpeak'].max()}**]")
+  st.write("")
 
   data = {
     'Age': age,
@@ -262,4 +279,58 @@ elif selected=="Single Prediction":
 
 
 else :
-  st.write("Parapara")
+  st.header("Predict multiple data:")
+
+  sample_csv = df_final.iloc[:5, :-1].to_csv(index=False).encode('utf-8')
+
+  st.write("")
+  st.download_button("Download CSV Example", data=sample_csv, file_name='sample_heart_disease_parameters.csv', mime='text/csv')
+
+  st.write("")
+  st.write("")
+  file_uploaded = st.file_uploader("Upload a CSV file", type='csv')
+
+  if file_uploaded:
+    uploaded_df = pd.read_csv(file_uploaded)
+    prediction_arr = model.predict(uploaded_df)
+
+    bar = st.progress(0)
+    status_text = st.empty()
+
+    for i in range(1, 70):
+      status_text.text(f"{i}% complete")
+      bar.progress(i)
+      time.sleep(0.01)
+
+    result_arr = []
+
+    for prediction in prediction_arr:
+      if prediction == 0:
+        result = "Healthy"
+      elif prediction == 1:
+        result = "Heart disease level 1"
+      elif prediction == 2:
+        result = "Heart disease level 2"
+      elif prediction == 3:
+        result = "Heart disease level 3"
+      elif prediction == 4:
+        result = "Heart disease level 4"
+      result_arr.append(result)
+
+    uploaded_result = pd.DataFrame({'Prediction Result': result_arr})
+
+    for i in range(70, 101):
+      status_text.text(f"{i}% complete")
+      bar.progress(i)
+      time.sleep(0.01)
+      if i == 100:
+        time.sleep(1)
+        status_text.empty()
+        bar.empty()
+
+    col1, col2 = st.columns([1, 2])
+
+    with col1:
+      st.dataframe(uploaded_result)
+    with col2:
+      st.dataframe(uploaded_df)
