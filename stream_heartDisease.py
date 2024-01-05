@@ -118,7 +118,6 @@ if selected=="Beranda" :
   img = Image.open("heart-disease-thumb.jpg")
 
   st.image("heart-disease-thumb.jpg", use_column_width=True)
-  container = st.container(border=True)
   st.write("Penyakit jantung adalah kondisi ketika bagian jantung yang meliputi pembuluh darah jantung, selaput jantung, katup jantung, dan otot jantung mengalami gangguan. Penyakit jantung bisa disebabkan oleh berbagai hal, seperti sumbatan pada pembuluh darah jantung, peradangan, infeksi, atau kelainan bawaan.")
 
   st.subheader("Dataset")
