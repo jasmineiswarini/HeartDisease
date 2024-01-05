@@ -103,4 +103,9 @@ from streamlit_option_menu import option_menu
 with st.sidebar:
   selected =option_menu("Main Menu", ["Home","Single Prediction","Multiple Prediction"],
                         icons = ['house','person','people'], menu_icon="cast", default_index=1)
-st.write("You selected:", selected)
+if selected=="Home" :
+  st.write("You selected:", selected)
+elif selected=="Single Prediction":
+  st.write("Hayo")
+else :
+  st.write("Parapara")
